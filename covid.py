@@ -1,16 +1,32 @@
 #!/usr/bin/python3
 
+def checkwall(matrix, dir, pos=[]):
+    print(len(matrix))
+    print(dir)
+    print(pos)
+    if dir == "left" and pos[1] == 0:
+        return -1
+    if dir == "right" and pos[1] >= len(matrix) -1:
+        print("{}, {}".format(pos[1],len(matrix) -1))
+        return -1
+    if dir == "up" and pos[0] == 0:
+        return -1
+    if dir == "down" and pos[0] >= len(matrix) -1 :
+        return -1
+    return 1
+    
 
 def verify_spot(matrix, spot, pos=[]):
-	# if pos[0] - spot < 0 or pos[0] + spot > len(matrix):
-	# 	return "Pared"
-	# if pos[1] - spot < 0 or pos[1] + spot > len(matrix):
+	#if pos[0] - spot < 0 or pos[0] + spot > len(matrix):
+	#    return "Pared"
+	#if pos[1] - spot < 0 or pos[1] + spot > len(matrix):
 	# 	return "Pared"
     for i in range(-spot, spot + 1):
         for j in range (-spot, spot + 1):
-            #print("<{},{}> = {}".format(i,j,matrix[pos[0] + i][pos[1] + j]))
+            if pos[0]+i > len(matrix)-1 or pos[1]+j > len(matrix)-1:
+                continue
             if matrix[pos[0] + i][pos[1] + j] == 1:
-                print("Collision in: ({}, {})".format(pos[0] + i, pos[1] + i))
+                print("Collision in: ({}, {})".format(pos[0] + i, pos[1] + j))
                 return False
     return True
 
@@ -22,16 +38,16 @@ def print_matrix(matrix):
 
 spots = [
 		[0, 0, 0, 0, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 0, 1, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 0, 0, 0, 0, 0, 0, 0, 0],
-		[0, 1, 0, 1, 0, 0, 0, 0, 0],
+		[0, 0, 0, 0, 0, 1, 0, 0, 0],
+		[0, 1, 0, 0, 0, 0, 0, 0, 0],
 		[0, 0, 0, 0, 0, 0, 0, 0, 0]
 	]
-allowed_spots = 2
+allowed_spots = 1
 
 x1 = int(input("coordenada en x ini: "))
 y1 = int(input("coordenada en y ini: "))
@@ -49,6 +65,9 @@ if ((x1-x2 != 0) ^ (y1-y2 != 0)):
     if (x1 - x2 > 0):
         print("arriba")
         for i in range(abs(x1 - x2)):
+            if checkwall(spots, "up", [x1, y1]) == -1:
+                print("cant move to up because the wall")
+                exit()
             x1 -= 1
             spots[x1][y1] = "x"
             print_matrix(spots)
@@ -61,6 +80,9 @@ if ((x1-x2 != 0) ^ (y1-y2 != 0)):
     if (x1 - x2 < 0):
         print("abajo")
         for i in range(abs(x1 - x2)):
+            if checkwall(spots, "down", [x1, y1]) ==-1:
+                print("cant move to down because the wall")
+                exit()
             x1 += 1
             spots[x1][y1] = "x"
             print_matrix(spots)
@@ -74,6 +96,9 @@ if ((x1-x2 != 0) ^ (y1-y2 != 0)):
     if (y1 - y2 > 0):
         print("izq")
         for i in range(abs(y1 - y2)):
+            if checkwall(spots, "left", [x1, y1]) ==-1:
+                print("cant move to left because the wall")
+                exit()
             y1 -= 1
             spots[x1][y1] = "x"
             print_matrix(spots)
@@ -86,6 +111,9 @@ if ((x1-x2 != 0) ^ (y1-y2 != 0)):
     if (y1 - y2 < 0):
         print("derecha")
         for i in range(abs(y1 - y2)):
+            if checkwall(spots, "right", [x1, y1]) == -1:
+                print("cant move to right because the wall")
+                exit()
             y1 += 1
             spots[x1][y1] = "x"
             print_matrix(spots)
